@@ -7,7 +7,7 @@ get '/' do
   HTML
 end
 
-post '/auth/:name/callback' do
+get '/auth/:name/callback' do
   auth = request.env['omniauth.auth']
   session[:uid] = env['omniauth.auth']['uid']
   # this is the main endpoint to your application
