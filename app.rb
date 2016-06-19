@@ -1,16 +1,24 @@
 require 'sinatra'
 require 'omniauth-clever'
+require 'json'
 
 get '/' do
-  <<-HTML
-   Clever OAuth Demo
-  HTML
+  @user_id = nil
+  if session[:auth]
+    @user_id = session[:auth][:uid]
+    @session_info = session[:auth][:extra][:raw_info].to_json
+  end
+
+  erb :index
 end
 
 get '/auth/:name/callback' do
   auth = request.env['omniauth.auth']
-  session[:uid] = env['omniauth.auth']['uid']
-  # this is the main endpoint to your application
+  session[:auth] = auth
   redirect to('/')
-  # do whatever you want with the information!
+end
+
+post '/sign_out' do
+  session[:auth] = nil
+  redirect to('/')
 end
